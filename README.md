@@ -1,17 +1,18 @@
-# MAINA - Maintenance Assistant (with Voice Input)
+# MAINA - Maintenance Assistant (Final Version)
 
-MAINA is an intelligent maintenance assistant built with Streamlit + LangChain. It lets you:
+MAINA is an intelligent assistant for maintenance teams. It allows users to:
 
-- Upload maintenance manuals (PDFs)
-- Ask questions in text **or voice (WAV)**
-- Get step-by-step fixes and source references
+- Upload PDF manuals (optional)
+- Use preloaded manuals stored in the `sample_manuals/` folder
+- Ask questions in text or voice (WAV)
+- Get step-by-step instructions and visual references
 
 ## 🚀 How to Run
 
 1. Clone this repo:
 ```
-git clone https://github.com/yourname/MAINA_app_voice.git
-cd MAINA_app_voice
+git clone https://github.com/yourusername/MAINA_app_final.git
+cd MAINA_app_final
 ```
 
 2. Install dependencies:
@@ -24,24 +25,22 @@ pip install -r requirements.txt
 streamlit run maina_app.py
 ```
 
-## 📁 Folder Structure
+## 📂 Folder Structure
 
 ```
-MAINA_app_voice/
+MAINA_app_final/
 ├── maina_app.py
 ├── requirements.txt
 ├── README.md
 └── sample_manuals/
-    └── aztech_flexo_manual.pdf  # (Add this manually)
+    └── (Place your PDF manuals here)
 ```
 
-## 🌐 Deploy on Streamlit Cloud
+## 🌐 Deploy to Streamlit Cloud
 
-1. Push this folder to GitHub
+1. Push this folder to your GitHub repository
 2. Go to https://streamlit.io/cloud
-3. Choose this repo and set `maina_app.py` as the entry point
+3. Set `maina_app.py` as the entry point and deploy!
 
 ---
-🎙️ Voice input requires `.wav` file uploads using Google Speech Recognition API.
-
-🔧 Built with ❤️ for maintenance professionals.
+✅ Built for smart, hands-free maintenance support.
