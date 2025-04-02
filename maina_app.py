@@ -33,7 +33,7 @@ def load_sample_manuals():
 sample_docs = load_sample_manuals()
 text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 chunks = text_splitter.split_documents(sample_docs)
-embeddings = OpenAIEmbeddings()
+embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
 vectorstore = FAISS.from_documents(chunks, embeddings)
 
 # --- File Upload ---
