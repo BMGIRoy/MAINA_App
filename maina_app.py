@@ -13,8 +13,11 @@ import io
 st.set_page_config(page_title="MAINA - Maintenance Assistant")
 st.title("🔧 MAINA - Maintenance Assistant")
 
-# Logo added to the top
-st.image("/mnt/data/image.png", width=300)  # Using the logo uploaded by the user
+# Embedding the logo as base64 string
+logo_base64 = "{img_base64}"
+
+# Display the logo in the app
+st.image("data:image/png;base64," + logo_base64, width=300)
 
 st.markdown("""
     ### **How to use MAINA:**
@@ -67,52 +70,51 @@ if uploaded_files:
     st.success("✅ Uploaded manuals added to the assistant!")
     st.session_state.vectorstore = vectorstore
 
-if st.session_state.vectorstore:
-    st.subheader("🔍 Ask a Question")
-    question_input = st.text_input("Type your maintenance query:", value=st.session_state.question, placeholder="What does error code 102 mean?")
-    voice_input = st.file_uploader("🎙️ Or upload a voice question (WAV format)", type=["wav"])
+st.subheader("🔍 Ask a Question")
+question_input = st.text_input("Type your maintenance query:", value=st.session_state.question, placeholder="What does error code 102 mean?")
+voice_input = st.file_uploader("🎙️ Or upload a voice question (WAV format)", type=["wav"])
 
-    if voice_input is not None:
-        recognizer = sr.Recognizer()
-        with sr.AudioFile(io.BytesIO(voice_input.read())) as source:
-            audio_data = recognizer.record(source)
-            try:
-                question_input = recognizer.recognize_google(audio_data)
-                st.success(f"Recognized question: {question_input}")
-            except sr.UnknownValueError:
-                st.error("Could not understand audio")
-            except sr.RequestError:
-                st.error("Error with the speech recognition service")
+if voice_input is not None:
+    recognizer = sr.Recognizer()
+    with sr.AudioFile(io.BytesIO(voice_input.read())) as source:
+        audio_data = recognizer.record(source)
+        try:
+            question_input = recognizer.recognize_google(audio_data)
+            st.success(f"Recognized question: {question_input}")
+        except sr.UnknownValueError:
+            st.error("Could not understand audio")
+        except sr.RequestError:
+            st.error("Error with the speech recognition service")
 
-    if st.button("🔍 Ask"):
-        st.session_state.question = question_input
-        st.session_state.run_query = "ask"
+if st.button("🔍 Ask"):
+    st.session_state.question = question_input
+    st.session_state.run_query = "ask"
 
-    if st.button("🧭 Step-by-Step Fix"):
-        st.session_state.run_query = "step"
+if st.button("🧭 Step-by-Step Fix"):
+    st.session_state.run_query = "step"
 
-    if st.session_state.run_query in ["ask", "step"] and st.session_state.question:
-        llm = ChatOpenAI(temperature=0)
-        qa_chain = RetrievalQA.from_chain_type(
-            llm=llm,
-            retriever=st.session_state.vectorstore.as_retriever(),
-            return_source_documents=True
-        )
-        if st.session_state.run_query == "ask":
-            result = qa_chain({"query": st.session_state.question})
-            answer = result['result']
-            source_docs = result['source_documents']
-            st.markdown("### 💡 Answer:")
-            st.write(answer)
-            st.markdown("### 📚 Source(s):")
-            for doc in source_docs:
-                st.write(f"{doc.metadata.get('source', 'Unknown Source')}")
-        elif st.session_state.run_query == "step":
-            followup_q = f"Give step-by-step instructions to resolve: {st.session_state.question}"
-            step_result = qa_chain({"query": followup_q})
-            st.info(step_result['result'])
+if st.session_state.run_query in ["ask", "step"] and st.session_state.question:
+    llm = ChatOpenAI(temperature=0)
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm,
+        retriever=st.session_state.vectorstore.as_retriever(),
+        return_source_documents=True
+    )
+    if st.session_state.run_query == "ask":
+        result = qa_chain({"query": st.session_state.question})
+        answer = result['result']
+        source_docs = result['source_documents']
+        st.markdown("### 💡 Answer:")
+        st.write(answer)
+        st.markdown("### 📚 Source(s):")
+        for doc in source_docs:
+            st.write(f"{doc.metadata.get('source', 'Unknown Source')}")
+    elif st.session_state.run_query == "step":
+        followup_q = f"Give step-by-step instructions to resolve: {st.session_state.question}"
+        step_result = qa_chain({"query": followup_q})
+        st.info(step_result['result'])
 
-        st.session_state.run_query = ""
+    st.session_state.run_query = ""
 else:
     st.info("👈 Load default manuals or upload new ones to get started.")
 
