@@ -13,6 +13,16 @@ import io
 st.set_page_config(page_title="MAINA - Maintenance Assistant")
 st.title("🔧 MAINA - Maintenance Assistant")
 
+# Logo added to the top
+st.image("/mnt/data/image.png", width=300)  # Using the logo uploaded by the user
+
+st.markdown("""
+    ### **How to use MAINA:**
+    1. **Ask your maintenance questions** directly in text or upload a voice query.
+    2. **Get instant answers** sourced from your equipment manuals.
+    3. **Click on step-by-step fixes** for detailed troubleshooting guides.
+""")
+
 if 'vectorstore' not in st.session_state:
     st.session_state.vectorstore = None
 
@@ -105,3 +115,11 @@ if st.session_state.vectorstore:
         st.session_state.run_query = ""
 else:
     st.info("👈 Load default manuals or upload new ones to get started.")
+
+# Footer with company tagline
+st.markdown("""
+    ---
+    **Powered by BMGI**  
+    Unlocking Potential. Delivering Results.  
+    Celebrating 30 Years
+""")
