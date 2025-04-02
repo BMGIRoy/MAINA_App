@@ -89,14 +89,15 @@ if st.session_state.vectorstore:
         answer = result['result']
         source_docs = result['source_documents']
 
-        st.markdown("---
-💡 **Answer:**")
+        st.markdown("""---
+💡 **Answer:**""")
         st.write(answer)
 
-        st.markdown("---
-📚 **Source(s):**")
+        st.markdown("""---
+📚 **Source(s):**""")
         for doc in source_docs:
             st.write(f"{doc.metadata.get('source', 'Unknown Source')}")
+
 
         # Optional Features
         col1, col2, col3 = st.columns(3)
